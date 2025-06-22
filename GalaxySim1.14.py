@@ -122,6 +122,24 @@ def classify(i):
             abc[i]["Obj_Color"] = Normalize(abc[i]["Obj_Comp"].get("O", 0), vector(0.4, 0.7, 0.9), abc[i]["Obj_Comp"].get("Fe", 0), vector(0.8, 0.4, 0.3), abc[i]["Obj_Comp"].get("C", 0),vector(1.0, 0.8, 0.4))
             abc[i]["Obj_Sphere"] = sphere(pos=vector(abc[i]["Obj_Position"]["x"], abc[i]["Obj_Position"]["y"], abc[i]["Obj_Position"]["z"]), radius=radi, color=abc[i]["Obj_Color"], make_trail=True, retain=1000, emissive = False)
 
+def infolabel():
+    mpos = scene.mouse.pos
+    hovered = None
+    for i in abc:
+        obj = abc[i]["Obj_Sphere"]
+        distance = mag(mpos - obj.pos)
+        if distance < 1.1 * obj.radius:
+            hovered = i
+            break
+    
+    if hovered is not None:
+        obj = abc[hovered]
+        info_label.pos = obj["Obj_Sphere"].pos + vector(0, 1.1 * obj["Obj_Sphere"].radius, 0)
+        info_label.text = f"Name : {obj['Obj_Name']} \nType : {obj['Obj_Type']} \nTemp : {obj['Obj_Temp']}"
+        info_label.visible = True
+    else:
+        info_label.visible = False
+
 ObjectNum = int(input("Enter number of objects: "))
 
 for i in range(ObjectNum):
@@ -169,6 +187,7 @@ def Pause():
         pausebut.text = "Play"
 
 pausebut = button(bind=Pause, text="Pause")
+info_label = label(pos=vector(0,0,0), text='', height=12, box=True, opacity=0.6, visible=False)
 
 running = True
 dt = 0.01
