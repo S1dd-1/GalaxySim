@@ -197,6 +197,7 @@ while True:
     rate(60)
     if running:
         ToRemove = []
+        infolabel()
         for i in abcKeys:
             if i in ToRemove:
                 continue
